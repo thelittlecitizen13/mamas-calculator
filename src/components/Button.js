@@ -7,7 +7,10 @@ export default function Button(props) {
         return !isNaN(val) || val === "." || val === "=";
     }
     return (
-        <div className={`button ${isOperator(props.children) ? "" : "operator"}`}>
+        <div 
+        className={`button ${isOperator(props.children) ? "" : "operator"}`}
+        onClick={() => props.handleClick(props.children)}
+        >
             {props.children}
         </div>
     )

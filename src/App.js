@@ -1,40 +1,70 @@
-import React from 'react';
+import React, {useState, useRef} from 'react';
 import Button from './components/Button';
 import Input from './components/Input';
 import ClearButton from './components/ClearButton';
 import './App.css';
 
-function App() {
+function App() 
+{
+const [state, setState] = useState({
+  input: "",
+  previousNumber: "",
+  currentNumber: "",
+  operator: ""
+});
+
+const addToInput = val => {
+setState({input: state.input + val});
+}
+const calculatorKeysOrdered = 
+['7' ,'8', '9', '/', '4', '5', '6', '*', 
+'1', '2', '3', '+', '.', '0', '=', '-'];
+
+const calcKeysRef = useRef();
+
+const createButtonsForRow = () => {
+  var components = [];
+    for(var j = 0; j < 4; j++)
+    {
+      var componentChildren = calculatorKeysOrdered.shift();
+      var componentProps = "handleClick={addToInput}"
+      // var buttonComponent = React.createElement('Button',
+      // componentProps,
+      // componentChildren);
+      var buttonComponent = <Button handleClick={addToInput}>{componentChildren}</Button>
+      components.push(buttonComponent);
+    
+    }
+    return components;
+  }
+
+const createButtonDiv = () => {
+    
+    var rows = [];
+    var numberOfRows = calculatorKeysOrdered.length
+    for(var i = 0; i < numberOfRows  / 4; i++)
+    {
+      var children = createButtonsForRow();
+      var rowDiv = React.createElement('div', {className: "row"}, children);
+      rows.push(rowDiv);
+      
+    }
+    var calcDiv = React.createElement('div', {}, rows);
+    return calcDiv;
+  }
+  
+
   return (
     <div className="App">
       <div className="calc-wrapper">
         <div className="row">
-          <Input></Input>
+          <Input>{state.input}</Input>
         </div>
-        <div className="row">
-          <Button>7</Button>
-          <Button>8</Button>
-          <Button>9</Button>
-          <Button>/</Button>
+        <div id="calcKeys" ref={calcKeysRef}>
+          {createButtonDiv()}
+          
         </div>
-        <div className="row">
-          <Button>4</Button>
-          <Button>5</Button>
-          <Button>6</Button>
-          <Button>*</Button>
-        </div>
-        <div className="row">
-          <Button>1</Button>
-          <Button>2</Button>
-          <Button>3</Button>
-          <Button>+</Button>
-        </div>
-        <div className="row">
-          <Button>.</Button>
-          <Button>0</Button>
-          <Button>=</Button>
-          <Button>-</Button>
-        </div>
+      
         <div className="row">
           <ClearButton>Clear</ClearButton>
         </div>

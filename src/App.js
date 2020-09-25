@@ -20,6 +20,31 @@ const calculatorKeysOrdered =
 ['7' ,'8', '9', '/', '4', '5', '6', '*', 
 '1', '2', '3', '+', '.', '0', '=', '-'];
 
+const clearInput = () =>{
+  setState({ input: '' });
+  
+  // if (state.input === "")
+  // {
+  //   setState({previousNumber: ""});
+  //   setState({currentNumber: ""});
+  //   setState({operator: ""});
+  // }
+  // else
+  // {
+  //   setState({input: ""});
+  //   setState({currentNumber: ""});
+  // }
+}
+
+const isOperator = val => {
+  return !(!isNaN(val) || val === "=");
+}
+
+const addOperatorToInput = val => {
+  if (val === "." && state.input.indexOf(".") === -1)
+  {setState({input: state.input + val})}
+}
+
 const calcKeysRef = useRef();
 
 const createButtonsForRow = () => {
@@ -27,11 +52,20 @@ const createButtonsForRow = () => {
     for(var j = 0; j < 4; j++)
     {
       var componentChildren = calculatorKeysOrdered.shift();
-      var componentProps = "handleClick={addToInput}"
+      //var componentProps = "handleClick={addToInput}"
       // var buttonComponent = React.createElement('Button',
       // componentProps,
       // componentChildren);
-      var buttonComponent = <Button handleClick={addToInput}>{componentChildren}</Button>
+      //var buttonComponent = <Button handleClick={addToInput}>{componentChildren}</Button>
+      if (!isOperator(componentChildren))
+      {
+        var buttonComponent = <Button handleClick={addToInput}>{componentChildren}</Button>
+      }
+      else{
+        var buttonComponent = <Button handleClick={addOperatorToInput}>{componentChildren}</Button>
+      }
+
+      
       components.push(buttonComponent);
     
     }
@@ -54,6 +88,7 @@ const createButtonDiv = () => {
   }
   
 
+
   return (
     <div className="App">
       <div className="calc-wrapper">
@@ -66,7 +101,7 @@ const createButtonDiv = () => {
         </div>
       
         <div className="row">
-          <ClearButton>Clear</ClearButton>
+          <ClearButton handleClick={clearInput}>Clear</ClearButton>
         </div>
 
       </div>

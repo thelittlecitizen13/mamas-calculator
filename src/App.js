@@ -1,7 +1,7 @@
 import React, {useState, useRef} from 'react';
-import Button from './components/Button';
+import Button from './components/Buttons/Button';
 import Input from './components/Input';
-import ClearButton from './components/ClearButton';
+import ClearButton from './components/Buttons/ClearButton';
 import './App.css';
 
 function App() 

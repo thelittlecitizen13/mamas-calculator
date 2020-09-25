@@ -2,7 +2,40 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import * as serviceWorker from './serviceWorker';
+import {createStore} from 'redux';
+
+// Actions
+const addInput = () => {
+  return {
+    type: 'ADDINPUT'
+  }
+}
+
+const clearInput = () => {
+  return {
+    type: 'CLEARINPUT'
+  }
+}
+
+// Reducer
+const input = (state = 0, action) =>{
+    switch(action.type){
+      case 'ADDINPUT':
+        return state;
+      case 'CLEARINPUT':
+        state = '';
+        return state;
+    }
+}
+
+// Creating the store
+let store = createStore(input);
+
+// Display it in the console
+store.subscribe(() => console.log(store.getState()));
+
+// Dispatch
+store.dispatch(addInput());
 
 ReactDOM.render(
   <React.StrictMode>
@@ -11,7 +44,3 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();

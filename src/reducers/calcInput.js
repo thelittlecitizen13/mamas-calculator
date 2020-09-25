@@ -3,7 +3,7 @@ const calcInputReducer = (state = '', action) =>{
       case 'ADDINPUT':
         return state + action.payload;
       case 'SETINPUT':
-        return action.payload;
+        return `${action.payload}`;
     default:
         return state;
     }

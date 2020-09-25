@@ -6,12 +6,7 @@ import './App.css';
 
 function App() 
 {
-const [state, setState] = useState({
-  input: "",
-  previousNumber: "",
-  currentNumber: "",
-  operator: ""
-});
+const [state, setState] = useState({input: ""});
 
 const addToInput = val => {
 setState({input: state.input + val});
@@ -22,27 +17,41 @@ const calculatorKeysOrdered =
 
 const clearInput = () =>{
   setState({ input: '' });
-  
-  // if (state.input === "")
-  // {
-  //   setState({previousNumber: ""});
-  //   setState({currentNumber: ""});
-  //   setState({operator: ""});
-  // }
-  // else
-  // {
-  //   setState({input: ""});
-  //   setState({currentNumber: ""});
-  // }
 }
 
 const isOperator = val => {
   return !(!isNaN(val) || val === "=");
 }
 
+const canAddOperator = () =>{
+  if (
+    state.input.indexOf("*") === state.input.length - 1 ||
+    state.input.indexOf("/") === state.input.length - 1 ||
+    state.input.indexOf("-") === state.input.length - 1 ||
+    state.input.indexOf("+") === state.input.length - 1
+  )
+  {
+    return false;
+  }
+  else
+  {
+    return true;
+  }
+  
+}
+
 const addOperatorToInput = val => {
   if (val === "." && state.input.indexOf(".") === -1)
-  {setState({input: state.input + val})}
+  {
+    setState({input: state.input + val})
+  }
+  else if(canAddOperator()){
+    setState({input: state.input + val})
+  }
+}
+
+const calculate = () => {
+  setState({input: eval(state.input)})
 }
 
 const calcKeysRef = useRef();
@@ -52,18 +61,19 @@ const createButtonsForRow = () => {
     for(var j = 0; j < 4; j++)
     {
       var componentChildren = calculatorKeysOrdered.shift();
-      //var componentProps = "handleClick={addToInput}"
-      // var buttonComponent = React.createElement('Button',
-      // componentProps,
-      // componentChildren);
-      //var buttonComponent = <Button handleClick={addToInput}>{componentChildren}</Button>
       if (!isOperator(componentChildren))
       {
         var buttonComponent = <Button handleClick={addToInput}>{componentChildren}</Button>
       }
       else{
+        
         var buttonComponent = <Button handleClick={addOperatorToInput}>{componentChildren}</Button>
       }
+      if (componentChildren === "=")
+      {
+        var buttonComponent = <Button handleClick={calculate}>{componentChildren}</Button>
+      }
+    
 
       
       components.push(buttonComponent);

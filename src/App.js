@@ -2,21 +2,28 @@ import React, {useState, useRef} from 'react';
 import Button from './components/Buttons/Button';
 import Input from './components/Input';
 import ClearButton from './components/Buttons/ClearButton';
+import { useSelector, useDispatch } from 'react-redux';
+import {addInput, setInput} from './actions';
 import './App.css';
 
 function App() 
 {
-const [state, setState] = useState({input: ""});
+  const input = useSelector(state => state.input);
+  const dispatch = useDispatch();
 
 const addToInput = val => {
-setState({input: state.input + val});
+  if(input === 'Expression not valid')
+  {
+    clearInput();
+  }
+  dispatch(addInput(val));
 }
 const calculatorKeysOrdered = 
 ['7' ,'8', '9', '/', '4', '5', '6', '*', 
 '1', '2', '3', '+', '.', '0', '=', '-'];
 
 const clearInput = () =>{
-  setState({ input: '' });
+  dispatch(setInput(''));
 }
 
 const isOperator = val => {
@@ -25,10 +32,10 @@ const isOperator = val => {
 
 const canAddOperator = () =>{
   if (
-    state.input.indexOf("*") === state.input.length - 1 ||
-    state.input.indexOf("/") === state.input.length - 1 ||
-    state.input.indexOf("-") === state.input.length - 1 ||
-    state.input.indexOf("+") === state.input.length - 1
+    input.indexOf("*") === input.length - 1 ||
+    input.indexOf("/") === input.length - 1 ||
+    input.indexOf("-") === input.length - 1 ||
+    input.indexOf("+") === input.length - 1
   )
   {
     return false;
@@ -41,17 +48,24 @@ const canAddOperator = () =>{
 }
 
 const addOperatorToInput = val => {
-  if (val === "." && state.input.indexOf(".") === -1)
+  if (val === "." && input.indexOf(".") === -1)
   {
-    setState({input: state.input + val})
+    addToInput(val);
   }
   else if(canAddOperator()){
-    setState({input: state.input + val})
+    addToInput(val);
   }
 }
 
 const calculate = () => {
-  setState({input: eval(state.input)})
+  try{
+    dispatch(setInput(eval(input)));
+  }
+  catch
+  {
+    dispatch(setInput('Expression not valid'));
+  }
+  
 }
 
 const calcKeysRef = useRef();
@@ -103,7 +117,7 @@ const createButtonDiv = () => {
     <div className="App">
       <div className="calc-wrapper">
         <div className="row">
-          <Input>{state.input}</Input>
+          <Input>{input}</Input>
         </div>
         <div id="calcKeys" ref={calcKeysRef}>
           {createButtonDiv()}

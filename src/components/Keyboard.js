@@ -2,7 +2,7 @@ import React from 'react'
 import ClearButton from './Buttons/ClearButton';
 import { useSelector, useDispatch } from 'react-redux';
 import {addInput, setInput} from '../actions';
-import Button from './Buttons/Button';
+import Button from './Buttons/Button'
 
 export default function Keyboard() {
 
@@ -15,7 +15,7 @@ export default function Keyboard() {
         }
         dispatch(addInput(val));
       }
-      const calculatorKeysOrdered = 
+      var calculatorKeysOrdered = 
       ['7' ,'8', '9', '/', '4', '5', '6', '*', 
       '1', '2', '3', '+', '.', '0', '=', '-'];
       
@@ -49,7 +49,7 @@ export default function Keyboard() {
         {
           addToInput(val);
         }
-        else if(canAddOperator()){
+        else if(val !== "." & canAddOperator()){
           addToInput(val);
         }
       }
@@ -71,17 +71,18 @@ export default function Keyboard() {
           for(var j = 0; j < 4; j++)
           {
             var componentChildren = calculatorKeysOrdered.shift();
+            var buttonComponent;
             if (!isOperator(componentChildren))
             {
-              var buttonComponent = <Button handleClick={addToInput}>{componentChildren}</Button>
+              buttonComponent = <Button handleClick={addToInput}>{componentChildren}</Button>
             }
             else{
               
-              var buttonComponent = <Button handleClick={addOperatorToInput}>{componentChildren}</Button>
+              buttonComponent = <Button handleClick={addOperatorToInput}>{componentChildren}</Button>
             }
             if (componentChildren === "=")
             {
-              var buttonComponent = <Button handleClick={calculate}>{componentChildren}</Button>
+              buttonComponent = <Button handleClick={calculate}>{componentChildren}</Button>
             }
           
       
@@ -95,8 +96,8 @@ export default function Keyboard() {
       const createButtonDiv = () => {
           
           var rows = [];
-          var numberOfRows = calculatorKeysOrdered.length
-          for(var i = 0; i < numberOfRows  / 4; i++)
+          var numberOfRows = calculatorKeysOrdered.length / 4
+          for(var i = 0; i < numberOfRows; i++)
           {
             var children = createButtonsForRow();
             var rowDiv = React.createElement('div', {className: "row"}, children);
